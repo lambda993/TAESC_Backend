@@ -1,6 +1,7 @@
 from core.utils.models import CoreModel
 from django.db import models
 from django.core.validators import RegexValidator
+from .side import UnitSide
 
 
 class Unit(CoreModel):
@@ -21,7 +22,8 @@ class Unit(CoreModel):
     french_description = models.CharField(max_length=100, blank=True)
     spanish_description = models.CharField(max_length=100, blank=True)
     italian_description = models.CharField(max_length=100, blank=True)
-    # side = models.ForeignKey(Side,on_delete=models.PROTECT,related_name="units")
+    side = models.ForeignKey(
+        UnitSide, on_delete=models.PROTECT, related_name="units")
     designation = models.CharField(
         max_length=20, blank=True, help_text="Unit 3D model name")
     footprint = models.CharField(max_length=10, validators=[RegexValidator(
