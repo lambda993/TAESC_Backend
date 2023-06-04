@@ -1,6 +1,7 @@
 from core.utils.models import CoreModel
 from django.db import models
 from django.core.validators import RegexValidator
+from .category import UnitCategory
 from .side import UnitSide
 
 
@@ -23,7 +24,7 @@ class Unit(CoreModel):
     spanish_description = models.CharField(max_length=100, blank=True)
     italian_description = models.CharField(max_length=100, blank=True)
     side = models.ForeignKey(
-        UnitSide, on_delete=models.PROTECT, related_name="units")
+        UnitSide, on_delete=models.PROTECT, related_name="unit_side")
     designation = models.CharField(
         max_length=20, blank=True, help_text="Unit 3D model name")
     footprint = models.CharField(max_length=10, validators=[RegexValidator(
@@ -58,9 +59,12 @@ class Unit(CoreModel):
     sonar_jammer = models.IntegerField(null=True, blank=True)
     stealth = models.BooleanField(
         default=False, help_text="This unit is invisible on the map")
-    # category=models.ManyToManyField(UnitCategory,related_name="units")
-    # bad_target_category=models.ForeignKey(UnitCategory,on_delete=models.PROTECT,related_name="units",null=True, blank=True)
-    # no_chase_category=models.ForeignKey(UnitCategory,on_delete=models.PROTECT,related_name="units",null=True, blank=True)
+    category = models.ManyToManyField(
+        UnitCategory, related_name="unit_category")
+    bad_target_category = models.ForeignKey(
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_bad_target_category", null=True, blank=True)
+    no_chase_category = models.ForeignKey(
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_no_chase_category", null=True, blank=True)
     # editor_class=models.ForeignKey(TEDClass,on_delete=models.PROTECT,related_name="units")
     # sound_category=models.ForeignKey(SoundCategory,on_delete=models.PROTECT,related_name="units")
     # movement_class=models.ForeignKey(MovementClass,on_delete=models.PROTECT,related_name="units")
@@ -71,11 +75,14 @@ class Unit(CoreModel):
     self_destruct_countdown = models.SmallIntegerField(
         null=True, blank=True, default=5)
     # weapon1=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
-    # weapon1_bad_target=models.ForeignKey(UnitCategory,on_delete=models.PROTECT,related_name="units",null=True, blank=True)
+    weapon1_bad_target = models.ForeignKey(
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_w1_bad_target", null=True, blank=True)
     # weapon2=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
-    # weapon2_bad_target=models.ForeignKey(UnitCategory,on_delete=models.PROTECT,related_name="units",null=True, blank=True)
+    weapon2_bad_target = models.ForeignKey(
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_w2_bad_target", null=True, blank=True)
     # weapon3=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
-    # weapon3_bad_target=models.ForeignKey(UnitCategory,on_delete=models.PROTECT,related_name="units",null=True, blank=True)
+    weapon3_bad_target = models.ForeignKey(
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_w3_bad_target", null=True, blank=True)
     shoot_me = models.BooleanField(
         default=False, help_text="Unit is engaged automatically when in range")
     antiweapons = models.BooleanField(
