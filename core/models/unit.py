@@ -2,6 +2,7 @@ from core.utils.models import CoreModel
 from django.db import models
 from django.core.validators import RegexValidator
 from .category import UnitCategory
+from .tedclass import TEDClass
 from .side import UnitSide
 
 
@@ -65,7 +66,8 @@ class Unit(CoreModel):
         UnitCategory, on_delete=models.PROTECT, related_name="unit_bad_target_category", null=True, blank=True)
     no_chase_category = models.ForeignKey(
         UnitCategory, on_delete=models.PROTECT, related_name="unit_no_chase_category", null=True, blank=True)
-    # editor_class=models.ForeignKey(TEDClass,on_delete=models.PROTECT,related_name="units")
+    editor_class = models.ForeignKey(
+        TEDClass, on_delete=models.PROTECT, related_name="unit_tedclass")
     # sound_category=models.ForeignKey(SoundCategory,on_delete=models.PROTECT,related_name="units")
     # movement_class=models.ForeignKey(MovementClass,on_delete=models.PROTECT,related_name="units")
     # default_orders=models.ForeignKey(UnitOrders,on_delete=models.PROTECT,related_name="units")
