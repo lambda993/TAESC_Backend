@@ -2,6 +2,8 @@ from core.utils.models import CoreModel
 from django.db import models
 from django.core.validators import RegexValidator
 from .category import UnitCategory
+from .movement import MovementClass
+from .orders import UnitOrders
 from .tedclass import TEDClass
 from .side import UnitSide
 
@@ -69,8 +71,10 @@ class Unit(CoreModel):
     editor_class = models.ForeignKey(
         TEDClass, on_delete=models.PROTECT, related_name="unit_tedclass")
     # sound_category=models.ForeignKey(SoundCategory,on_delete=models.PROTECT,related_name="units")
-    # movement_class=models.ForeignKey(MovementClass,on_delete=models.PROTECT,related_name="units")
-    # default_orders=models.ForeignKey(UnitOrders,on_delete=models.PROTECT,related_name="units")
+    movement_class = models.ForeignKey(
+        MovementClass, on_delete=models.PROTECT, related_name="unit_movement_class")
+    default_orders = models.ForeignKey(
+        UnitOrders, on_delete=models.PROTECT, related_name="unit_orders")
     # explode_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     # self_destruct_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     # corpse=models.ForeignKey(Corpse,on_delete=models.PROTECT,related_name="units")
