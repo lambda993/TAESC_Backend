@@ -1,11 +1,7 @@
 from coreutils.models import CoreModel
+from core.models import MovementClass, TEDClass, UnitCategory, UnitOrders, UnitSide
 from django.db import models
 from django.core.validators import RegexValidator
-from .category import UnitCategory
-from .movement import MovementClass
-from .orders import UnitOrders
-from .tedclass import TEDClass
-from .side import UnitSide
 
 
 class Unit(CoreModel):
