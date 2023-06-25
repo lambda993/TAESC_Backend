@@ -1,113 +1,122 @@
-from coreutils.models import CoreModel
+from coreutils.models import TranslatableCoreModel
 from core.models import MovementClass, TEDClass, UnitCategory, UnitOrders, UnitSide
 from django.db import models
 from django.core.validators import RegexValidator
+from django.utils.translation import gettext_lazy as _
 
 
-class Unit(CoreModel):
-    unit_name = models.CharField(
-        max_length=20, help_text="Unit ingame ID code")
-    unit_number = models.IntegerField(help_text="Ingame unit ID")
-    commander = models.BooleanField(
-        default=False, help_text="If game ends ruleset is selected, the death of this unit will end the game")
-    show_player_name = models.BooleanField(
-        default=False, help_text="Player's name will replace this unit's name")
-    name = models.CharField(max_length=50)
-    german_name = models.CharField(max_length=50, blank=True)
-    french_name = models.CharField(max_length=50, blank=True)
-    spanish_name = models.CharField(max_length=50, blank=True)
-    italian_name = models.CharField(max_length=50, blank=True)
-    description = models.CharField(max_length=100)
-    german_description = models.CharField(max_length=100, blank=True)
-    french_description = models.CharField(max_length=100, blank=True)
-    spanish_description = models.CharField(max_length=100, blank=True)
-    italian_description = models.CharField(max_length=100, blank=True)
+class Unit(TranslatableCoreModel):
+    unit_name = models.CharField(verbose_name=_('Unit name'),
+                                 max_length=20, help_text=_('Unit ingame ID code.'))
+    unit_number = models.IntegerField(verbose_name=_(
+        'Unit number'), help_text=_('Ingame unit ID.'))
+    commander = models.BooleanField(verbose_name=_('Commander'),
+                                    default=False, help_text=_('If game ends ruleset is selected, the death of this unit will end the game.'))
+    show_player_name = models.BooleanField(verbose_name=_('Show player name'),
+                                           default=False, help_text=_("Player's name will replace this unit's name."))
+    name = models.CharField(verbose_name=_('Name'), max_length=50, help_text=_(
+        'Name of the unit displayed ingame.'))
+    description = models.TextField(verbose_name=_(
+        'Description'), help_text=_('Unit ingame description.'))
     side = models.ForeignKey(
-        UnitSide, on_delete=models.PROTECT, related_name="unit_side")
-    designation = models.CharField(
-        max_length=20, blank=True, help_text="Unit 3D model name")
-    footprint = models.CharField(max_length=10, validators=[RegexValidator(
-        regex=r"^\d{1,2}x\d{1,2}$", message="Footprint must be of the AAxAA or AxA (where A is a digit) format!")])
-    yard_map = models.CharField(
-        max_length=500, blank=True, help_text="Map of how the game engine handles collisions")
-    build_energy_cost = models.IntegerField()
-    build_metal_cost = models.IntegerField()
-    build_time_cost = models.IntegerField()
-    energy_use = models.DecimalField(
-        max_digits=20, decimal_places=10, default=0)
-    metal_use = models.DecimalField(
-        max_digits=20, decimal_places=10, default=0)
-    energy_make = models.DecimalField(
-        max_digits=20, decimal_places=10, default=0)
-    metal_make = models.DecimalField(
-        max_digits=20, decimal_places=10, default=0)
-    energy_store = models.IntegerField(default=0)
-    metal_store = models.IntegerField(default=0)
-    max_damage = models.IntegerField(help_text="Unit health points")
-    damage_modifier = models.DecimalField(
-        max_digits=20, decimal_places=10, default=1, help_text="Damage reduction that is applied to the unit when hit by any damage")
-    heal_time = models.IntegerField(null=True, blank=True, default=0)
-    hide_damage = models.BooleanField(
-        default=False, help_text="Unit health bar is not displayed")
-    immune_to_paralyze = models.BooleanField(
-        default=False, help_text="This unit is immune to stun weapons")
-    sight_distance = models.IntegerField()
-    radar_distance = models.IntegerField(null=True, blank=True)
-    radar_jammer = models.IntegerField(null=True, blank=True)
-    sonar_distance = models.IntegerField(null=True, blank=True)
-    sonar_jammer = models.IntegerField(null=True, blank=True)
-    stealth = models.BooleanField(
-        default=False, help_text="This unit is invisible on the map")
+        UnitSide, on_delete=models.PROTECT, related_name="unit_side", verbose_name=_('Side'))
+    designation = models.CharField(verbose_name=_('Designation'),
+                                   max_length=20, blank=True, help_text=_('Unit 3D model name.'))
+    footprint = models.CharField(verbose_name=_('Footprint'), max_length=10, validators=[RegexValidator(
+        regex=r"^\d{1,2}x\d{1,2}$", message=_('Footprint must be of the AAxAA or AxA (where A is a digit) format!'))])
+    yard_map = models.TextField(verbose_name=_('Yard map'),
+                                blank=True, help_text=_('Map of how the game engine handles collisions'))
+    build_energy_cost = models.IntegerField(verbose_name=_(
+        'Build energy cost'), help_text=_('Total energy needed to build this unit.'))
+    build_metal_cost = models.IntegerField(verbose_name=_(
+        'Build metal cost'), help_text=_('Total metal needed to build this unit.'))
+    build_time_cost = models.IntegerField(verbose_name=_('Build cost time'), help_text=_(
+        'Total time in ingame ticks needed to build this unit.'))
+    energy_use = models.DecimalField(verbose_name=_('Energy use'), help_text=_('Amount of energy used by this unit to function.'),
+                                     max_digits=20, decimal_places=10, default=0)
+    metal_use = models.DecimalField(verbose_name=_('Metal use'), help_text=_('Amount of metal used by this unit to functio.'),
+                                    max_digits=20, decimal_places=10, default=0)
+    energy_make = models.DecimalField(verbose_name=_('Energy make'), help_text=_('Amount of energy produced by this unit.'),
+                                      max_digits=20, decimal_places=10, default=0)
+    metal_make = models.DecimalField(verbose_name=_('Metal make'), help_text=_('Amount of metal produced by this unit.'),
+                                     max_digits=20, decimal_places=10, default=0)
+    energy_store = models.IntegerField(default=0, verbose_name=_(
+        'Energy store'), help_text=_('Amount of energy storage generated by this unit.'))
+    metal_store = models.IntegerField(default=0, verbose_name=_(
+        'Metal store'), help_text=_('Amount of metal storage generated by this unit.'))
+    max_damage = models.IntegerField(verbose_name=_(
+        'Max damage'), help_text=_('Unit health points'))
+    damage_modifier = models.DecimalField(verbose_name=_('Damage modifier'),
+                                          max_digits=20, decimal_places=10, default=1, help_text=_('Damage reduction that is applied to the unit when hit.'))
+    heal_time = models.IntegerField(verbose_name=_('Heal time'), help_text=_(
+        'Amount of health regained per game tick.'), null=True, blank=True, default=0)
+    hide_damage = models.BooleanField(verbose_name=_('Hide damage'),
+                                      default=False, help_text=_("Hide unit's health bar."))
+    immune_to_paralyze = models.BooleanField(verbose_name=_('Immune to paralyze'),
+                                             default=False, help_text=_('This unit is immune to stun weapons'))
+    sight_distance = models.IntegerField(verbose_name=_(
+        'Sight distance'), help_text=_('How far is this unit able to see.'))
+    radar_distance = models.IntegerField(verbose_name=_('Radar distance'), help_text=_(
+        'How far this unit spots non submerged enemies on the map.'), null=True, blank=True, default=0)
+    radar_jammer = models.IntegerField(verbose_name=_('Radar jammer'), help_text=_(
+        'How far this unit jams enemy radar.'), null=True, blank=True, default=0)
+    sonar_distance = models.IntegerField(verbose_name=_('Sonar distance'), help_text=_(
+        'How far this unit spots sumberged enemies on the map.'), null=True, blank=True, default=0)
+    sonar_jammer = models.IntegerField(verbose_name=_('Sonar jammer'), help_text=_(
+        'How far this unit jams enemy sonar.'), null=True, blank=True, default=0)
+    stealth = models.BooleanField(verbose_name=_('Stealth'),
+                                  default=False, help_text=_('This unit is invisible to enemy radar.'))
     category = models.ManyToManyField(
-        UnitCategory, related_name="unit_category")
+        UnitCategory, related_name="unit_category", verbose_name=_('Category'), help_text=_('List of categories that this unit is represented by.'))
     bad_target_category = models.ForeignKey(
-        UnitCategory, on_delete=models.PROTECT, related_name="unit_bad_target_category", null=True, blank=True)
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_bad_target_category", null=True, blank=True, verbose_name=_('Bad target category'), help_text=_('Category this unit will have a hard time engaging.'))
     no_chase_category = models.ForeignKey(
-        UnitCategory, on_delete=models.PROTECT, related_name="unit_no_chase_category", null=True, blank=True)
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_no_chase_category", null=True, blank=True, verbose_name=_('No chase category'), help_text=_('Category this will not chase after when out of range.'))
     editor_class = models.ForeignKey(
-        TEDClass, on_delete=models.PROTECT, related_name="unit_tedclass")
+        TEDClass, on_delete=models.PROTECT, related_name="unit_tedclass", verbose_name=_('Editor class'), help_text=_('Category in which this unit is placed in the Total Annihilation Map Editor.'))
     # sound_category=models.ForeignKey(SoundCategory,on_delete=models.PROTECT,related_name="units")
     movement_class = models.ForeignKey(
-        MovementClass, on_delete=models.PROTECT, related_name="unit_movement_class")
+        MovementClass, on_delete=models.PROTECT, related_name="unit_movement_class", verbose_name=_('Movement class'), help_text=_('Ingame class on how this unit maneuvers on the map.'))
     default_orders = models.ForeignKey(
-        UnitOrders, on_delete=models.PROTECT, related_name="unit_orders")
+        UnitOrders, on_delete=models.PROTECT, related_name="unit_orders", verbose_name=_('Default orders'), help_text=_('How this unit behaves once built.'))
     # explode_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     # self_destruct_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     # corpse=models.ForeignKey(Corpse,on_delete=models.PROTECT,related_name="units")
-    self_destruct_countdown = models.SmallIntegerField(
-        null=True, blank=True, default=5)
+    self_destruct_countdown = models.SmallIntegerField(verbose_name=_('Self destruct countdown'), help_text=_('Seconds until this unit self destructs'),
+                                                       null=True, blank=True, default=5)
     # weapon1=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     weapon1_bad_target = models.ForeignKey(
-        UnitCategory, on_delete=models.PROTECT, related_name="unit_w1_bad_target", null=True, blank=True)
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_w1_bad_target", null=True, blank=True, verbose_name=_('Weapon 1 bad targeting category'))
     # weapon2=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     weapon2_bad_target = models.ForeignKey(
-        UnitCategory, on_delete=models.PROTECT, related_name="unit_w2_bad_target", null=True, blank=True)
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_w2_bad_target", null=True, blank=True, verbose_name=_('Weapon 2 bad targeting category'))
     # weapon3=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     weapon3_bad_target = models.ForeignKey(
-        UnitCategory, on_delete=models.PROTECT, related_name="unit_w3_bad_target", null=True, blank=True)
-    shoot_me = models.BooleanField(
-        default=False, help_text="Unit is engaged automatically when in range")
-    antiweapons = models.BooleanField(
-        default=False, help_text="This unit has anti-nuke weapons")
-    amphibious = models.BooleanField(
-        default=False, help_text="This unit can go underwater")
-    floater = models.BooleanField(
-        default=False, help_text="This unit can be engaged by torpedo weapons")
-    digger = models.BooleanField(
-        default=False, help_text="This unit is partially undergound")
-    can_fly = models.BooleanField(
-        default=False, help_text="This unit is immune to ground damage explosions")
-    can_hover = models.BooleanField(
-        default=False, help_text="This unit hovers over water, cannot be engaged by torpedo weapons")
-    is_airbase = models.BooleanField(
-        default=False, help_text="Aircraft can land on this unit for repairs")
-    is_feature = models.BooleanField(
-        default=False, help_text="This unit will become a map feature when built and will not count towards unit limit")
-    is_targeting_upgrade = models.BooleanField(
-        default=False, help_text="This unit will upgrade commanders and allow autonomous fire on units that are detected by radar/sonar")
+        UnitCategory, on_delete=models.PROTECT, related_name="unit_w3_bad_target", null=True, blank=True, verbose_name=_('Weapon 3 bad targeting category'))
+    shoot_me = models.BooleanField(verbose_name=_('Shoot me'),
+                                   default=False, help_text=_('This unit is engaged automatically when in range.'))
+    antiweapons = models.BooleanField(verbose_name=_('Anti weapons'),
+                                      default=False, help_text=_('This unit has anti-nuke weapons (used to make white rings on the map).'))
+    amphibious = models.BooleanField(verbose_name=_('Amphibious'),
+                                     default=False, help_text=_('This unit can go underwater.'))
+    floater = models.BooleanField(verbose_name=_('Floater'),
+                                  default=False, help_text=_('This unit can be engaged by torpedo weapons.'))
+    digger = models.BooleanField(verbose_name=_('Digger'),
+                                 default=False, help_text=_('This unit is partially undergound'))
+    can_fly = models.BooleanField(verbose_name=_('Can fly'),
+                                  default=False, help_text=_('This unit is immune to ground damage explosions'))
+    can_hover = models.BooleanField(verbose_name=_('Can hover'),
+                                    default=False, help_text=_('This unit hovers over water, cannot be engaged by torpedo weapons'))
+    is_airbase = models.BooleanField(verbose_name=_('Is airbase'),
+                                     default=False, help_text=_('Aircraft can land on this unit for repairs'))
+    is_feature = models.BooleanField(verbose_name=_('Is feature'),
+                                     default=False, help_text=_('This unit will become a map feature when built and will not count towards unit limit'))
+    is_targeting_upgrade = models.BooleanField(verbose_name=_('Is targeting upgrade'),
+                                               default=False, help_text=_('This unit will upgrade commanders and allow autonomous fire on units that are detected by radar/sonar'))
 
     def __str__(self):
-        return self.unit_name
+        return f'{self.unit_name} ({self.side.name} {self.name})'
 
     class Meta:
-        ordering = ["unit_name", "unit_number"]
+        ordering = ('-game_version', 'unit_name', 'unit_number')
+        unique_together = ('game_version', 'unit_name')
