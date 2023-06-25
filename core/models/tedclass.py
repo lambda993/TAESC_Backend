@@ -1,4 +1,4 @@
-from core.utils.models import CoreModel
+from coreutils.models import CoreModel
 from django.db import models
 
 
