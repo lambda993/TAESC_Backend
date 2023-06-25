@@ -1,5 +1,5 @@
 from coreutils.models import TranslatableCoreModel
-from core.models import MovementClass, TEDClass, UnitCategory, UnitOrder, UnitSide
+from core.models import Corpse, MovementClass, SoundCategory, TEDClass, UnitCategory, UnitOrder, UnitSide, Weapon
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
@@ -74,23 +74,30 @@ class Unit(TranslatableCoreModel):
         UnitCategory, on_delete=models.PROTECT, related_name="unit_no_chase_category", null=True, blank=True, verbose_name=_('No chase category'), help_text=_('Category this will not chase after when out of range.'))
     editor_class = models.ForeignKey(
         TEDClass, on_delete=models.PROTECT, related_name="unit_tedclass", verbose_name=_('Editor class'), help_text=_('Category in which this unit is placed in the Total Annihilation Map Editor.'))
-    # sound_category=models.ForeignKey(SoundCategory,on_delete=models.PROTECT,related_name="units")
+    sound_category = models.ForeignKey(SoundCategory, on_delete=models.PROTECT, related_name="units_sound_category", verbose_name=_(
+        'Sound category'), help_text=_('Category of sounds this unit will play.'))
     movement_class = models.ForeignKey(
         MovementClass, on_delete=models.PROTECT, related_name="unit_movement_class", verbose_name=_('Movement class'), help_text=_('Ingame class on how this unit maneuvers on the map.'))
     default_orders = models.ForeignKey(
         UnitOrder, on_delete=models.PROTECT, related_name="unit_orders", verbose_name=_('Default orders'), help_text=_('How this unit behaves once built.'))
-    # explode_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
-    # self_destruct_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
-    # corpse=models.ForeignKey(Corpse,on_delete=models.PROTECT,related_name="units")
-    self_destruct_countdown = models.SmallIntegerField(verbose_name=_('Self destruct countdown'), help_text=_('Seconds until this unit self destructs'),
+    explode_as = models.ForeignKey(Weapon, on_delete=models.PROTECT, related_name="units_explode_as", verbose_name=_(
+        'Explode as'), help_text=_('Weapon that fires when unit is killed.'))
+    self_destruct_as = models.ForeignKey(Weapon, on_delete=models.PROTECT, related_name="units_self_destruct_as", verbose_name=_(
+        'Self destruct as'), help_text=_('Weapon that is fired when unit dies by self destruction.'))
+    corpse = models.ForeignKey(Corpse, on_delete=models.PROTECT, related_name="units_corpse", verbose_name=_(
+        'Corpse'), help_text=_('Corpse left on the map after unit death.'))
+    self_destruct_countdown = models.SmallIntegerField(verbose_name=_('Self destruct countdown'), help_text=_('Seconds until this unit self destructs.'),
                                                        null=True, blank=True, default=5)
-    # weapon1=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
+    weapon1 = models.ForeignKey(Weapon, on_delete=models.PROTECT,
+                                related_name="units_weapon1", verbose_name=_('Weapon 1'))
     weapon1_bad_target = models.ForeignKey(
         UnitCategory, on_delete=models.PROTECT, related_name="unit_w1_bad_target", null=True, blank=True, verbose_name=_('Weapon 1 bad targeting category'))
-    # weapon2=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
+    weapon2 = models.ForeignKey(Weapon, on_delete=models.PROTECT,
+                                related_name="units_weapon2", verbose_name=_('Weapon 2'))
     weapon2_bad_target = models.ForeignKey(
         UnitCategory, on_delete=models.PROTECT, related_name="unit_w2_bad_target", null=True, blank=True, verbose_name=_('Weapon 2 bad targeting category'))
-    # weapon3=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
+    weapon3 = models.ForeignKey(Weapon, on_delete=models.PROTECT,
+                                related_name="units_weapon3", verbose_name=_('Weapon 3'))
     weapon3_bad_target = models.ForeignKey(
         UnitCategory, on_delete=models.PROTECT, related_name="unit_w3_bad_target", null=True, blank=True, verbose_name=_('Weapon 3 bad targeting category'))
     shoot_me = models.BooleanField(verbose_name=_('Shoot me'),
