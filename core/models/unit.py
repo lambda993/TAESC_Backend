@@ -1,5 +1,5 @@
 from coreutils.models import TranslatableCoreModel
-from core.models import MovementClass, TEDClass, UnitCategory, UnitOrders, UnitSide
+from core.models import MovementClass, TEDClass, UnitCategory, UnitOrder, UnitSide
 from django.db import models
 from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
@@ -78,7 +78,7 @@ class Unit(TranslatableCoreModel):
     movement_class = models.ForeignKey(
         MovementClass, on_delete=models.PROTECT, related_name="unit_movement_class", verbose_name=_('Movement class'), help_text=_('Ingame class on how this unit maneuvers on the map.'))
     default_orders = models.ForeignKey(
-        UnitOrders, on_delete=models.PROTECT, related_name="unit_orders", verbose_name=_('Default orders'), help_text=_('How this unit behaves once built.'))
+        UnitOrder, on_delete=models.PROTECT, related_name="unit_orders", verbose_name=_('Default orders'), help_text=_('How this unit behaves once built.'))
     # explode_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     # self_destruct_as=models.ForeignKey(Weapon,on_delete=models.PROTECT,related_name="units")
     # corpse=models.ForeignKey(Corpse,on_delete=models.PROTECT,related_name="units")
@@ -102,21 +102,24 @@ class Unit(TranslatableCoreModel):
     floater = models.BooleanField(verbose_name=_('Floater'),
                                   default=False, help_text=_('This unit can be engaged by torpedo weapons.'))
     digger = models.BooleanField(verbose_name=_('Digger'),
-                                 default=False, help_text=_('This unit is partially undergound'))
+                                 default=False, help_text=_('This unit is partially undergound.'))
     can_fly = models.BooleanField(verbose_name=_('Can fly'),
-                                  default=False, help_text=_('This unit is immune to ground damage explosions'))
+                                  default=False, help_text=_('This unit is immune to ground damage explosions.'))
     can_hover = models.BooleanField(verbose_name=_('Can hover'),
-                                    default=False, help_text=_('This unit hovers over water, cannot be engaged by torpedo weapons'))
+                                    default=False, help_text=_('This unit hovers over water, cannot be engaged by torpedo weapons.'))
     is_airbase = models.BooleanField(verbose_name=_('Is airbase'),
-                                     default=False, help_text=_('Aircraft can land on this unit for repairs'))
+                                     default=False, help_text=_('Aircraft can land on this unit for repairs.'))
     is_feature = models.BooleanField(verbose_name=_('Is feature'),
-                                     default=False, help_text=_('This unit will become a map feature when built and will not count towards unit limit'))
+                                     default=False, help_text=_('This unit will become a map feature when built and will not count towards unit limit.'))
     is_targeting_upgrade = models.BooleanField(verbose_name=_('Is targeting upgrade'),
-                                               default=False, help_text=_('This unit will upgrade commanders and allow autonomous fire on units that are detected by radar/sonar'))
+                                               default=False, help_text=_('This unit will upgrade commanders and allow autonomous fire on units that are detected by radar/sonar.'))
 
     def __str__(self):
         return f'{self.unit_name} ({self.side.name} {self.name})'
 
     class Meta:
+        verbose_name = _('Unit')
+        verbose_name_plural = _('Units')
         ordering = ('-game_version', 'unit_name', 'unit_number')
-        unique_together = ('game_version', 'unit_name')
+        unique_together = (('game_version', 'unit_name'),
+                           ('game_version', 'unit_name', 'unit_number'))
