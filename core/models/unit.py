@@ -23,8 +23,6 @@ class Unit(TranslatableCoreModel):
                                    max_length=20, blank=True, help_text=_('Unit 3D model name.'))
     footprint = models.ForeignKey(Footprint, on_delete=models.PROTECT, related_name='units_footprint', verbose_name=_(
         'Footprint'), help_text=_('Unit footprint on X and Z coordinates.'))
-    yard_map = models.TextField(verbose_name=_('Yard map'),
-                                blank=True, help_text=_('Map of how the game engine handles collisions'))
     hide_damage = models.BooleanField(verbose_name=_('Hide damage'),
                                       default=False, help_text=_("Hide unit's health bar."))
     immune_to_paralyze = models.BooleanField(verbose_name=_('Immune to paralyze'),
@@ -41,8 +39,6 @@ class Unit(TranslatableCoreModel):
         TEDClass, on_delete=models.PROTECT, related_name="unit_tedclass", verbose_name=_('Editor class'), help_text=_('Category in which this unit is placed in the Total Annihilation Map Editor.'))
     sound_category = models.ForeignKey(SoundCategory, on_delete=models.PROTECT, related_name="units_sound_category", verbose_name=_(
         'Sound category'), help_text=_('Category of sounds this unit will play.'))
-    movement_class = models.ForeignKey(
-        MovementClass, on_delete=models.PROTECT, related_name="unit_movement_class", verbose_name=_('Movement class'), help_text=_('Ingame class on how this unit maneuvers on the map.'))
     default_orders = models.ForeignKey(
         UnitOrder, on_delete=models.PROTECT, related_name="unit_orders", verbose_name=_('Default orders'), help_text=_('How this unit behaves once built.'))
     explode_as = models.ForeignKey(Weapon, on_delete=models.PROTECT, related_name="units_explode_as", verbose_name=_(
@@ -128,8 +124,8 @@ class UnitWeaponGroup(CoreModel):
         return self.unit
 
     class Meta:
-        verbose_name = _('Unit sight option')
-        verbose_name_plural = _('Unit sight options')
+        verbose_name = _('Unit weapon group')
+        verbose_name_plural = _('Unit weapon groups')
         ordering = ('-game_version', 'unit')
 
 
@@ -153,12 +149,12 @@ class UnitEconomy(CoreModel):
         return self.unit
 
     class Meta:
-        verbose_name = _('Unit sight option')
-        verbose_name_plural = _('Unit sight options')
+        verbose_name = _('Unit economy')
+        verbose_name_plural = _('Unit economies')
         ordering = ('-game_version', 'unit')
 
 
-class UnitBasicStats(CoreModel):
+class UnitBasicStat(CoreModel):
     unit = models.OneToOneField(Unit, on_delete=models.PROTECT,
                                 related_name='unit_basic_stats', verbose_name=_('Unit'))
     build_energy_cost = models.IntegerField(verbose_name=_(
@@ -178,8 +174,8 @@ class UnitBasicStats(CoreModel):
         return self.unit
 
     class Meta:
-        verbose_name = _('Unit sight option')
-        verbose_name_plural = _('Unit sight options')
+        verbose_name = _('Unit basic stat')
+        verbose_name_plural = _('Unit basic stats')
         ordering = ('-game_version', 'unit')
 
 
@@ -199,8 +195,8 @@ class UnitBuilder(CoreModel):
         return self.unit
 
     class Meta:
-        verbose_name = _('Unit sight option')
-        verbose_name_plural = _('Unit sight options')
+        verbose_name = _('Unit builder')
+        verbose_name_plural = _('Unit builders')
         ordering = ('-game_version', 'unit')
 
 
@@ -218,6 +214,61 @@ class UnitTransporter(CoreModel):
         return self.unit
 
     class Meta:
-        verbose_name = _('Unit sight option')
-        verbose_name_plural = _('Unit sight options')
+        verbose_name = _('Unit transporter')
+        verbose_name_plural = _('Unit transporters')
+        ordering = ('-game_version', 'unit')
+
+
+class UnitBuilding(CoreModel):
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT,
+                             related_name='units_building', verbose_name=_('Unit'))
+    yard_map = models.TextField(verbose_name=_('Yard map'),
+                                blank=True, help_text=_('Map of how the game engine handles collisions'))
+
+    def __str__(self):
+        return self.unit
+
+    class Meta:
+        verbose_name = _('Unit building')
+        verbose_name_plural = _('Unit buildings')
+        ordering = ('-game_version', 'unit')
+
+
+class UnitKamikaze(CoreModel):
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT,
+                             related_name='units_kamikaze', verbose_name=_('Unit'))
+    kamikaze_distance = models.SmallIntegerField(verbose_name=_('Kamikaze distance'), help_text=_(
+        'Minimum distance at wich a suicider unit will self destruct.'))
+
+    def __str__(self):
+        return self.unit
+
+    class Meta:
+        verbose_name = _('Unit kamikaze')
+        verbose_name_plural = _('Unit kamikazes')
+        ordering = ('-game_version', 'unit')
+
+
+class UnitMovement(CoreModel):
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT,
+                             related_name='units_movement', verbose_name=_('Unit'))
+    movement_class = models.ForeignKey(
+        MovementClass, on_delete=models.PROTECT, related_name='units_movement_class', verbose_name=_('Movement class'), help_text=_('Ingame class on how this unit maneuvers on the map.'))
+    max_velocity = models.DecimalField(verbose_name=_('Max velocity'), help_text=_('Maximum velocity the unit can attain.'),
+                                       max_digits=20, decimal_places=10, default=0)
+    acceleration = models.DecimalField(verbose_name=_('Acceleration'), help_text=_(
+        'Rate at which the unit is able to accelerate.'), max_digits=20, decimal_places=10, default=0)
+    brake_rate = models.DecimalField(verbose_name=_('Brake rate'), help_text=_(
+        'Rate at which the unit is able to decelerate.'), max_digits=20, decimal_places=10, default=0)
+    turn_rate = models.IntegerField(verbose_name=_(
+        'Turn rate'), help_text=_('Turn rate in binary degree fractions per second (16384 = 360 degrees).'))
+    maneuver_leash_length = models.IntegerField(verbose_name=_('Maneuver leash length'), help_text=_(
+        'How far a unit will move away from its stationary position in manuver mode.'))
+
+    def __str__(self):
+        return self.unit
+
+    class Meta:
+        verbose_name = _('Unit movement')
+        verbose_name_plural = _('Unit movements')
         ordering = ('-game_version', 'unit')
