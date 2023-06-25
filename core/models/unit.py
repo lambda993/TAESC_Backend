@@ -1,7 +1,6 @@
 from coreutils.models import CoreModel, TranslatableCoreModel
-from core.models import Corpse, MovementClass, SoundCategory, TEDClass, UnitCategory, UnitOrder, UnitSide, Weapon
+from core.models import Corpse, Footprint, MovementClass, SoundCategory, TEDClass, UnitCategory, UnitOrder, UnitSide, Weapon
 from django.db import models
-from django.core.validators import RegexValidator
 from django.utils.translation import gettext_lazy as _
 
 
@@ -22,8 +21,8 @@ class Unit(TranslatableCoreModel):
         UnitSide, on_delete=models.PROTECT, related_name="unit_side", verbose_name=_('Side'))
     designation = models.CharField(verbose_name=_('Designation'),
                                    max_length=20, blank=True, help_text=_('Unit 3D model name.'))
-    footprint = models.CharField(verbose_name=_('Footprint'), max_length=10, validators=[RegexValidator(
-        regex=r"^\d{1,2}x\d{1,2}$", message=_('Footprint must be of the AAxAA or AxA (where A is a digit) format!'))])
+    footprint = models.ForeignKey(Footprint, on_delete=models.PROTECT, related_name='units_footprint', verbose_name=_(
+        'Footprint'), help_text=_('Unit footprint on X and Z coordinates.'))
     yard_map = models.TextField(verbose_name=_('Yard map'),
                                 blank=True, help_text=_('Map of how the game engine handles collisions'))
     hide_damage = models.BooleanField(verbose_name=_('Hide damage'),
@@ -174,6 +173,46 @@ class UnitBasicStats(CoreModel):
                                           max_digits=20, decimal_places=10, default=1, help_text=_('Damage reduction that is applied to the unit when hit.'))
     heal_time = models.IntegerField(verbose_name=_('Heal time'), help_text=_(
         'Amount of health regained per game tick.'), null=True, blank=True, default=0)
+
+    def __str__(self):
+        return self.unit
+
+    class Meta:
+        verbose_name = _('Unit sight option')
+        verbose_name_plural = _('Unit sight options')
+        ordering = ('-game_version', 'unit')
+
+
+class UnitBuilder(CoreModel):
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT,
+                             related_name='units_builder', verbose_name=_('Unit'))
+    worker_time = models.IntegerField(verbose_name=_(
+        'Worker time'), help_text=_('Building speed of the unit per game tick.'))
+    build_distance = models.IntegerField(verbose_name=_(
+        'Build distance'), help_text=_('How far can this unit build from.'))
+    can_resurrect = models.BooleanField(
+        verbose_name=_('Can resurrect'), default=False)
+    can_capture = models.BooleanField(
+        verbose_name=_('Can capture'), default=False)
+
+    def __str__(self):
+        return self.unit
+
+    class Meta:
+        verbose_name = _('Unit sight option')
+        verbose_name_plural = _('Unit sight options')
+        ordering = ('-game_version', 'unit')
+
+
+class UnitTransporter(CoreModel):
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT,
+                             related_name='units_transporter', verbose_name=_('Unit'))
+    transport_size = models.SmallIntegerField(verbose_name=_(
+        'Transport size'), help_text=_('Amount of units this transporter can load at once.'))
+    transport_capacity = models.SmallIntegerField(verbose_name=_(
+        'Transport capacity'), help_text=_('Transport footprint for each unit.'))
+    transport_max_units = models.SmallIntegerField(verbose_name=_(
+        'Transport max units'), help_text=_('Maximum total unit transported footprint.'))
 
     def __str__(self):
         return self.unit
