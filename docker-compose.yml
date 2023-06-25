@@ -1,0 +1,29 @@
+version: '3.1'
+
+x-service-volumes:
+  &service-volumes
+  - ./:/TAESC_Backend/:rw,cached
+
+services:
+  taesc:
+    image: taesc_backend
+    container_name: taesc
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes: *service-volumes
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:15.3
+    container_name: taesc-pg-db
+    env_file:
+      - pg.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg-taesc:/var/lib/pgsql/data/
+
+volumes:
+  pg-taesc:
