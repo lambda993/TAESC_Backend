@@ -13,4 +13,5 @@ class Corpse(TranslatableCoreModel):
     class Meta:
         verbose_name = _('Corpse')
         verbose_name_plural = _('Corpses')
-        ordering = ('corpse_name',)
+        ordering = ('-game_version', 'corpse_name')
+        unique_together = ('game_version', 'corpse_name')

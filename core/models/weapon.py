@@ -13,4 +13,5 @@ class Weapon(TranslatableCoreModel):
     class Meta:
         verbose_name = _('Weapon')
         verbose_name_plural = _('Wrapons')
-        ordering = ('weapon_name',)
+        ordering = ('-game_version', 'weapon_name')
+        unique_together = ('game_version', 'weapon_name')

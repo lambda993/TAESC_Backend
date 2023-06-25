@@ -12,4 +12,5 @@ class UnitSide(CoreModel):
     class Meta:
         verbose_name = _('Side')
         verbose_name_plural = _('Sides')
-        ordering = ('name',)
+        ordering = ('-game_version', 'name')
+        unique_together = ('game_version', 'name')

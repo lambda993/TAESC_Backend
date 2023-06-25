@@ -12,4 +12,5 @@ class MovementClass(CoreModel):
     class Meta:
         verbose_name = _('Movement class')
         verbose_name_plural = _('Movement classes')
-        ordering = ('name',)
+        ordering = ('-game_version', 'name')
+        unique_together = ('game_version', 'name')

@@ -12,4 +12,5 @@ class UnitOrder(CoreModel):
     class Meta:
         verbose_name = _('Unit order')
         verbose_name_plural = _('Unit orders')
-        ordering = ('name',)
+        ordering = ('-game_version', 'name')
+        unique_together = ('game_version', 'name')

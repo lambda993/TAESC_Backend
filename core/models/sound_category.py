@@ -12,4 +12,5 @@ class SoundCategory(CoreModel):
     class Meta:
         verbose_name = _('Sound category')
         verbose_name_plural = _('Sound categories')
-        ordering = ('sound_name',)
+        ordering = ('-game_version', 'sound_name')
+        unique_together = ('game_version', 'sound_name')

@@ -12,4 +12,5 @@ class TEDClass(CoreModel):
     class Meta:
         verbose_name = _('TED Class')
         verbose_name_plural = _('TED Classes')
-        ordering = ('name',)
+        ordering = ('-game_version', 'name')
+        unique_together = ('game_version', 'name')
