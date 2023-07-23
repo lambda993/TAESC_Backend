@@ -1,7 +1,11 @@
-from coreutils.models import CoreModel
-from core.models import Corpse, Footprint, MovementClass, SoundCategory, TEDClass, UnitCategory, UnitOrder, UnitSide, Weapon
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from coreutils.models import CoreModel
+from core.models import (
+    Corpse, Footprint, MovementClass,
+    SoundCategory, TEDClass, UnitCategory,
+    UnitOrder, UnitSide, Weapon
+)
 
 
 class Unit(CoreModel):

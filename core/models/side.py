@@ -1,6 +1,6 @@
-from coreutils.models import CoreModel
 from django.db import models
 from django.utils.translation import gettext_lazy as _
+from coreutils.models import CoreModel
 
 
 class UnitSide(CoreModel):
