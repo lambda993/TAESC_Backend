@@ -1,10 +1,10 @@
-from coreutils.models import CoreModel, TranslatableCoreModel
+from coreutils.models import CoreModel
 from core.models import Corpse, Footprint, MovementClass, SoundCategory, TEDClass, UnitCategory, UnitOrder, UnitSide, Weapon
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Unit(TranslatableCoreModel):
+class Unit(CoreModel):
     unit_name = models.CharField(verbose_name=_('Unit name'),
                                  max_length=20, help_text=_('Unit ingame ID code.'))
     unit_number = models.IntegerField(verbose_name=_(

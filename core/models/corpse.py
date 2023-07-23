@@ -1,9 +1,9 @@
-from coreutils.models import TranslatableCoreModel
+from coreutils.models import CoreModel
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Corpse(TranslatableCoreModel):
+class Corpse(CoreModel):
     corpse_name = models.CharField(
         verbose_name=_('Corpse name'), max_length=20)
 

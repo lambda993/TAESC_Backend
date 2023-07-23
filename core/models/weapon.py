@@ -1,9 +1,9 @@
-from coreutils.models import TranslatableCoreModel
+from coreutils.models import CoreModel
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
-class Weapon(TranslatableCoreModel):
+class Weapon(CoreModel):
     weapon_name = models.CharField(
         verbose_name=_('Weapon name'), max_length=20)
 
