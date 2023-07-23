@@ -102,6 +102,7 @@ class UnitSightOption(CoreModel):
         verbose_name = _('Unit sight option')
         verbose_name_plural = _('Unit sight options')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitWeaponGroup(CoreModel):
@@ -127,6 +128,7 @@ class UnitWeaponGroup(CoreModel):
         verbose_name = _('Unit weapon group')
         verbose_name_plural = _('Unit weapon groups')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitEconomy(CoreModel):
@@ -152,6 +154,7 @@ class UnitEconomy(CoreModel):
         verbose_name = _('Unit economy')
         verbose_name_plural = _('Unit economies')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitBasicStat(CoreModel):
@@ -177,6 +180,7 @@ class UnitBasicStat(CoreModel):
         verbose_name = _('Unit basic stat')
         verbose_name_plural = _('Unit basic stats')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitBuilder(CoreModel):
@@ -198,6 +202,7 @@ class UnitBuilder(CoreModel):
         verbose_name = _('Unit builder')
         verbose_name_plural = _('Unit builders')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitTransporter(CoreModel):
@@ -217,6 +222,7 @@ class UnitTransporter(CoreModel):
         verbose_name = _('Unit transporter')
         verbose_name_plural = _('Unit transporters')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitBuilding(CoreModel):
@@ -232,6 +238,7 @@ class UnitBuilding(CoreModel):
         verbose_name = _('Unit building')
         verbose_name_plural = _('Unit buildings')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitKamikaze(CoreModel):
@@ -247,6 +254,7 @@ class UnitKamikaze(CoreModel):
         verbose_name = _('Unit kamikaze')
         verbose_name_plural = _('Unit kamikazes')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
 
 
 class UnitMovement(CoreModel):
@@ -272,3 +280,4 @@ class UnitMovement(CoreModel):
         verbose_name = _('Unit movement')
         verbose_name_plural = _('Unit movements')
         ordering = ('-game_version', 'unit')
+        unique_together = ('game_version', 'unit')
