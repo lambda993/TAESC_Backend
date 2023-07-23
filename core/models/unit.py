@@ -286,7 +286,7 @@ class UnitMovement(CoreModel):
 
 
 class UnitWater(CoreModel):
-    unit = models.OneToOneField(
+    unit = models.ForeignKey(
         Unit, on_delete=models.PROTECT, related_name='units_water', verbose_name=_('Unit'))
     amphibious = models.BooleanField(verbose_name=_('Amphibious'),
                                      default=False, help_text=_('This unit can go underwater.'))
@@ -310,8 +310,8 @@ class UnitWater(CoreModel):
 
 
 class UnitEconomySpecial(CoreModel):
-    unit = models.OneToOneField(Unit, on_delete=models.PROTECT,
-                                related_name='units_economy_special', verbose_name=_('Unit'))
+    unit = models.ForeignKey(Unit, on_delete=models.PROTECT,
+                             related_name='units_economy_special', verbose_name=_('Unit'))
     extracts_metal = models.DecimalField(verbose_name=_('Extracts Metal'), help_text=_(
         'Rate of metal units extracted when placed on metal deposits.'), max_digits=20, decimal_places=10, default=0)
     wind_generator = models.SmallIntegerField(verbose_name=_('Wind Generator'), help_text=_(
@@ -330,7 +330,7 @@ class UnitEconomySpecial(CoreModel):
 
 
 class UnitAircraft(CoreModel):
-    unit = models.OneToOneField(
+    unit = models.ForeignKey(
         Unit, on_delete=models.PROTECT, related_name='units_aircraft', verbose_name=_('Unit'))
     can_fly = models.BooleanField(verbose_name=_('Can fly'),
                                   default=False, help_text=_('This unit is immune to ground damage explosions.'))
