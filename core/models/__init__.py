@@ -8,7 +8,8 @@ from .side import UnitSide
 from .sound_category import SoundCategory
 from .weapon import Weapon
 from .unit import (
-    Unit, UnitBasicStat, UnitBuilder, UnitEconomy,
+    Unit, UnitAircraft, UnitBasicStat, UnitBuilder,
+    UnitEconomy, UnitEconomySpecial,
     UnitKamikaze, UnitMovement, UnitSightOption,
-    UnitTransporter, UnitWeaponGroup
+    UnitTransporter, UnitWater, UnitWeaponGroup
 )
