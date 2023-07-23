@@ -5,8 +5,15 @@ import sys
 
 
 def main():
-    """Run administrative tasks."""
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'TAESC_Backend.settings')
+    try:
+        sys.argv.remove('-dev')
+        os.environ.setdefault(
+            'DJANGO_SETTINGS_MODULE', 'TAESC_Backend.settings.development'
+        )
+    except ValueError:
+        os.environ.setdefault(
+            'DJANGO_SETTINGS_MODULE', 'TAESC_Backend.settings.production'
+        )
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:

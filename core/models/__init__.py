@@ -7,4 +7,8 @@ from .tedclass import TEDClass
 from .side import UnitSide
 from .sound_category import SoundCategory
 from .weapon import Weapon
-from .unit import Unit, UnitBasicStat, UnitBuilder, UnitEconomy, UnitKamikaze, UnitMovement, UnitSightOption, UnitTransporter, UnitWeaponGroup
+from .unit import (
+    Unit, UnitBasicStat, UnitBuilder, UnitEconomy,
+    UnitKamikaze, UnitMovement, UnitSightOption,
+    UnitTransporter, UnitWeaponGroup
+)
